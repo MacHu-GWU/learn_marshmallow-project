@@ -10,6 +10,7 @@ from marshmallow import Schema, fields
 
 
 class User(object):
+
     def __init__(self, name, acc, pwd):
         self.name = name
         self.acc = acc
@@ -32,13 +33,15 @@ user_data = {
     "pwd": "MyPassword",
 }
 result = schema.load(user_data)
-print(result.data) # {'name': 'John David', 'email': 'john@email.com', 'password': 'MyPassword'}
-print(result.errors) # {}
+assert result.data == {
+    'name': 'John David', 'email': 'john@email.com', 'password': 'MyPassword'}
+assert result.errors == {}
 
 user = User(name="John David", acc="john@email.com", pwd="MyPassword")
 result = schema.load(user_data)
-print(result.data) # {'name': 'John David', 'email': 'john@email.com', 'password': 'MyPassword'}
-print(result.errors) # {}
+assert result.data == {
+    'name': 'John David', 'email': 'john@email.com', 'password': 'MyPassword'}
+assert result.errors == {}
 
 
 # load的时候依然会从默认的email, password中load数据, 优先级别是password > load_from
@@ -49,5 +52,6 @@ user_data = {
     "pwd": "pwd",
 }
 result = schema.load(user_data)
-print(result.data) # {'name': 'John David', 'email': 'john@email.com', 'password': 'MyPassword'}
-print(result.errors) # {}
+assert result.data == {
+    'name': 'John David', 'email': 'john@email.com', 'password': 'MyPassword'}
+assert result.errors == {}

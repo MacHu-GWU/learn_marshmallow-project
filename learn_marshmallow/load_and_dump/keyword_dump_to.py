@@ -11,6 +11,7 @@ from marshmallow import Schema, fields
 
 
 class User(object):
+
     def __init__(self, name, email, password):
         self.name = name
         self.email = email
@@ -31,10 +32,13 @@ user_data = {
     "password": "MyPassword",
 }
 result = schema.dump(user_data)
-print(result.data) # {'name': 'John David', 'acc': 'john@email.com', 'pwd': 'MyPassword'}
-print(result.errors) # {}
+assert result.data == {
+    'name': 'John David', 'acc': 'john@email.com', 'pwd': 'MyPassword'}
+assert result.errors == {}
 
 user = User(name="John David", email="john@email.com", password="MyPassword")
 result = schema.dump(user)
-print(result.data) # {'name': 'John David', 'acc': 'john@email.com', 'pwd': 'MyPassword'}
-print(result.errors) # {}
+result = schema.dump(user_data)
+assert result.data == {
+    'name': 'John David', 'acc': 'john@email.com', 'pwd': 'MyPassword'}
+assert result.errors == {}

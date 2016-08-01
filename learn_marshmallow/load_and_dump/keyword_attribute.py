@@ -12,6 +12,7 @@ from marshmallow import Schema, fields
 
 
 class User(object):
+
     def __init__(self, name, acc, pwd):
         self.name = name
         self.acc = acc
@@ -34,13 +35,15 @@ user_data = {
     "pwd": "MyPassword",
 }
 result = schema.dump(user_data)
-print(result.data) # {'name': 'John David', 'email': 'john@email.com', 'password': 'MyPassword'}
-print(result.errors) # {}
+assert result.data == {
+    'name': 'John David', 'email': 'john@email.com', 'password': 'MyPassword'}
+assert result.errors == {}
 
 user = User(name="John David", acc="john@email.com", pwd="MyPassword")
 result = schema.dump(user)
-print(result.data) # {'name': 'John David', 'email': 'john@email.com', 'password': 'MyPassword'}
-print(result.errors) # {}
+assert result.data == {
+    'name': 'John David', 'email': 'john@email.com', 'password': 'MyPassword'}
+assert result.errors == {}
 
 
 # 原数据中的项是email, password, 但是dump的时候并不认
@@ -50,5 +53,5 @@ user_data = {
     "password": "MyPassword",
 }
 result = schema.dump(user_data)
-print(result.data) # {'name': 'John David'}
-print(result.errors) # {}
+assert result.data == {'name': 'John David'}
+assert result.errors == {}

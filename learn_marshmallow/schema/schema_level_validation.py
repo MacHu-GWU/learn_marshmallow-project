@@ -22,5 +22,5 @@ class NumberSchema(Schema):
 
 schema = NumberSchema()
 result = schema.load({'field_a': 1, 'field_b': 2})
-print(result.data)
-print(result.errors) # {'_schema': ['field_a must be greater than field_b']}
+assert result.data == {'field_a': 1, 'field_b': 2}
+assert result.errors == {'_schema': ['field_a must be greater than field_b']}
