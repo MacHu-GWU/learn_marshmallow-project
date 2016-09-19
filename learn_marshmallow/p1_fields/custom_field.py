@@ -18,9 +18,12 @@ class NameTitleFormatted(fields.Field):
     """每一个单词的第一个字母大写。
     """
 
-    def _validate(self, value):
+    def convert(self, value):
         """"when can  I  see  you  again " -> "When Can I See You Again"
         """
+        if value is None:
+            return None
+        
         if isinstance(value, string_types):
             value = value.strip()
             if value:
@@ -34,12 +37,20 @@ class NameTitleFormatted(fields.Field):
                 raise ValidationError("Can't be empty string")
         else:
             raise ValidationError("Not a string type")
-
+    
+    def _validate(self, value):
+        if value is None:
+            return
+        if isinstance(value, string_types):
+            return
+        else:
+            raise ValidationError("Not a string type") 
+    
     def _serialize(self, value, attr, obj):
-        return self._validate(value)
+        return self.convert(value)
 
     def _deserialize(self, value, attr, data):
-        return self._validate(value)
+        return self.convert(value)
 
 
 class Music(object):
@@ -56,21 +67,26 @@ class MusicSchema(Schema):
 
 schema = MusicSchema()
 
+def test_custom_field():
+    music_data = {
+        "title": "when   can   i   see   you   again",
+        "artists": ["owl city", ],
+    }
+    result = schema.load(music_data)
+    assert result.data == {
+        'title': 'When Can I See You Again', 'artists': ['Owl City']}
+    assert result.errors == {}
+    
+    music_data = {
+        "title": "   ",
+        "artists": "owl city",
+    }
+    result = schema.load(music_data)
+    assert result.data == {}
+    assert result.errors == {
+        'title': ["Can't be empty string"], 'artists': ['Not a valid list.']}
 
-music_data = {
-    "title": "when   can   i   see   you   again",
-    "artists": ["owl city", ],
-}
-result = schema.load(music_data)
-assert result.data == {
-    'title': 'When Can I See You Again', 'artists': ['Owl City']}
-assert result.errors == {}
 
-music_data = {
-    "title": "   ",
-    "artists": "owl city",
-}
-result = schema.load(music_data)
-assert result.data == {}
-assert result.errors == {
-    'title': ["Can't be empty string"], 'artists': ['Not a valid list.']}
+if __name__ == "__main__":
+    #
+    test_custom_field()
