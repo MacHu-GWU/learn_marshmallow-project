@@ -4,8 +4,12 @@
 自定义Field。自定义Field主要要实现三个方法:
 
 - Field._validate: 在load的时候对值进行验证
-- Field._serialize: 支持dump方法
-- Field._deserialize: 支持load方法
+- Field._serialize(self, value, attr, obj, **kwargs): 支持dump方法
+- Field._deserialize(self, value, attr, data, **kwargs): 支持load方法
+
+Ref:
+
+- https://marshmallow.readthedocs.io/en/stable/custom_fields.html
 """
 
 from marshmallow import Schema, fields, ValidationError
